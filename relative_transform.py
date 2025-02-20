@@ -4,6 +4,8 @@ import maya.OpenMayaUI as omui
 import maya.cmds as cmds
 import shiboken6 as shiboken
 
+cmds.setToolTo('Move')
+
 def get_maya_window():
     ptr = omui.MQtUtil.mainWindow()
     if ptr is not None:
