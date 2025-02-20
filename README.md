@@ -1,4 +1,4 @@
-For older Maya versions you have to edit import of PySide and shiboken from 6 to 2.
+For older Maya versions you have to edit import of PySide and shiboken.
 Example:
 
 2025:
