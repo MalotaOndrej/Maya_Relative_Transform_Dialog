@@ -40,9 +40,20 @@ class SetPosition(qg.QDialog):
         if event.key() in (qc.Qt.Key_Return, qc.Qt.Key_Enter):
             pivot_orient = cmds.manipMoveContext('Move', query=True, translate=True)
             
-            input_x = float(self.entry_x.text()) if self.entry_x.text() else 0.0
-            input_y = float(self.entry_y.text()) if self.entry_y.text() else 0.0
-            input_z = float(self.entry_z.text()) if self.entry_z.text() else 0.0
+            try:
+                input_x = float(self.entry_x.text()) if self.entry_x.text() else 0.0
+            except ValueError:
+                input_x = 0.0
+                
+            try:
+                input_y = float(self.entry_y.text()) if self.entry_y.text() else 0.0
+            except ValueError:
+                input_y = 0.0
+                
+            try:
+                input_z = float(self.entry_z.text()) if self.entry_z.text() else 0.0
+            except ValueError:
+                input_z = 0.0
             
             translation_input = [input_x, input_y, input_z]
             
