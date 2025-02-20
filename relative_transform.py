@@ -1,13 +1,13 @@
-from PySide2 import QtCore as qc
-from PySide2 import QtWidgets as qg
+from PySide6 import QtCore as qc
+from PySide6 import QtWidgets as qg
 import maya.OpenMayaUI as omui
 import maya.cmds as cmds
-import shiboken2
+import shiboken6 as shiboken
 
 def get_maya_window():
     ptr = omui.MQtUtil.mainWindow()
     if ptr is not None:
-        return shiboken2.wrapInstance(int(ptr), qg.QWidget)
+        return shiboken.wrapInstance(int(ptr), qg.QWidget)
 
 class SetPosition(qg.QDialog):
     def __init__(self, parent=None):
@@ -36,10 +36,18 @@ class SetPosition(qg.QDialog):
 
     def keyPressEvent(self, event):
         if event.key() in (qc.Qt.Key_Return, qc.Qt.Key_Enter):
-            cmds.move(self.entry_x.text() if self.entry_x.text() else 0,
-                      self.entry_y.text() if self.entry_y.text() else 0,
-                      self.entry_z.text() if self.entry_z.text() else 0,
-                      relative=True)
+            pivot_orient = cmds.manipMoveContext('Move', query=True, translate=True)
+            
+            input_x = float(self.entry_x.text()) if self.entry_x.text() else 0.0
+            input_y = float(self.entry_y.text()) if self.entry_y.text() else 0.0
+            input_z = float(self.entry_z.text()) if self.entry_z.text() else 0.0
+            
+            translation_input = [input_x, input_y, input_z]
+            
+            result = [x + y for x, y in zip(pivot_orient, translation_input)]
+            
+            cmds.manipMoveContext('Move', edit=True, translate=[result[0], result[1], result[2]])
+            
             self.hide()
         elif event.key() == qc.Qt.Key_Escape:
             self.hide()
