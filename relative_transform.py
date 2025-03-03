@@ -40,6 +40,19 @@ class SetPosition(qg.QDialog):
         if event.key() in (qc.Qt.Key_Return, qc.Qt.Key_Enter):
             pivot_orient = cmds.manipMoveContext('Move', query=True, translate=True)
             
+            current_unit = cmds.currentUnit(query=True, linear=True)
+
+            unit_to_cm = {
+            'mm': 0.1,
+            'cm': 1.0,
+            'm': 100.0,
+            'in': 2.54,
+            'ft': 30.48,
+            'yd': 91.44
+            }
+            
+            conversion_factor = unit_to_cm.get(current_unit, 1.0)
+            
             try:
                 input_x = float(self.entry_x.text()) if self.entry_x.text() else 0.0
             except ValueError:
@@ -55,7 +68,7 @@ class SetPosition(qg.QDialog):
             except ValueError:
                 input_z = 0.0
             
-            translation_input = [input_x, input_y, input_z]
+            translation_input = [input_x * conversion_factor, input_y * conversion_factor, input_z * conversion_factor]
             
             result = [x + y for x, y in zip(pivot_orient, translation_input)]
             
